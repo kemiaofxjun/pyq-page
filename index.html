@@ -6,55 +6,25 @@
   <title>朋友圈 Lite</title>
   <link rel="stylesheet" href="https://fastly.jsdelivr.net/gh/willow-god/Friend-Circle-Lite/main/fclite.min.css" />
 
-  <!-- 主题切换 + 导航美化 -->
+  <!-- 仅浅色主题 + 导航美化 -->
   <style>
     :root {
       --nav-height: 70px;
+      --nav-bg: rgba(255, 255, 255, 0.9);
+      --nav-text: #333;
+      --nav-border: rgba(0, 0, 0, 0.08);
+      --btn-bg: #f5f5f5;
+      --btn-hover: #e0e0e0;
       --backdrop-blur: 20px;
-      
-      /* 浅色模式变量 */
-      --bg-light: #f4f4f9;
-      --nav-bg-light: rgba(255, 255, 255, 0.9);
-      --nav-text-light: #333;
-      --nav-border-light: rgba(0, 0, 0, 0.08);
-      --btn-bg-light: #f5f5f5;
-      --btn-hover-light: #e0e0e0;
-      
-      /* 深色模式变量 */
-      --bg-dark: #181818;
-      --nav-bg-dark: rgba(28, 28, 28, 0.9);
-      --nav-text-dark: #f7f7fa;
-      --nav-border-dark: rgba(255, 255, 255, 0.1);
-      --btn-bg-dark: #2a2a2a;
-      --btn-hover-dark: #3a3a3a;
-      
-      /* 默认浅色模式 */
-      --bg: var(--bg-light);
-      --nav-bg: var(--nav-bg-light);
-      --nav-text: var(--nav-text-light);
-      --nav-border: var(--nav-border-light);
-      --btn-bg: var(--btn-bg-light);
-      --btn-hover: var(--btn-hover-light);
-    }
-
-    /* 深色模式 */
-    [data-theme="dark"] {
-      --bg: var(--bg-dark);
-      --nav-bg: var(--nav-bg-dark);
-      --nav-text: var(--nav-text-dark);
-      --nav-border: var(--nav-border-dark);
-      --btn-bg: var(--btn-bg-dark);
-      --btn-hover: var(--btn-hover-dark);
     }
 
     *{box-sizing:border-box;margin:0;padding:0}
     body{
       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-      background:var(--bg);
-      color:var(--nav-text);
+      background:#f4f4f9;
+      color:#000;
       line-height:1.6;
       padding-top:var(--nav-height);
-      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     /* 导航栏 */
@@ -70,7 +40,6 @@
       -webkit-backdrop-filter:blur(var(--backdrop-blur));
       background:var(--nav-bg);
       border-bottom:1px solid var(--nav-border);
-      transition: background-color 0.3s ease, border-color 0.3s ease;
     }
     .navbar-inner{
       width:100%;max-width:1200px;
@@ -87,12 +56,11 @@
       display:flex;
       align-items:center;
       gap:8px;
-      transition: color 0.3s ease;
     }
     .navbar-brand::before{content:"🌐";font-size:24px}
 
     .navbar-nav{display:flex;align-items:center;gap:12px}
-    .nav-btn, .theme-toggle{
+    .nav-btn{
       padding:10px 18px;
       background:var(--btn-bg);
       border:1px solid var(--nav-border);
@@ -100,40 +68,22 @@
       color:var(--nav-text);
       font-size:14px;
       cursor:pointer;
-      transition: all 0.3s ease;
+      transition:.3s;
     }
-    .nav-btn:hover, .theme-toggle:hover{
-      background:var(--btn-hover);
-      transform:translateY(-2px)
-    }
-
-    /* 主题切换按钮 */
-    .theme-toggle{
-      display:flex;
-      align-items:center;
-      gap:6px;
-    }
-    .theme-icon{
-      font-size:16px;
-      transition: transform 0.3s ease;
-    }
-    .theme-toggle:hover .theme-icon{
-      transform: rotate(180deg);
-    }
+    .nav-btn:hover{background:var(--btn-hover);transform:translateY(-2px)}
 
     /* 滚动按钮 */
     .scroll-btn{
       position:fixed;
       right:24px;
       width:48px;height:48px;
-      background:var(--btn-bg);
+      background:#fff;
       border:1px solid var(--nav-border);
       border-radius:50%;
       cursor:pointer;
       opacity:0;pointer-events:none;
-      transition: all 0.3s ease;
-      display:flex;align-items:center;justify-content:center;font-size:20px;z-index:999;
-      color:var(--nav-text);
+      transition:.3s;
+      display:flex;align-items:center;justify-content:center;font-size:20px;z-index:999
     }
     .scroll-btn.visible{opacity:.8;pointer-events:auto}
     .scroll-btn:hover{opacity:1;transform:translateY(-3px)}
@@ -147,7 +97,7 @@
     @media(max-width:600px){
       .navbar-inner{padding:0 16px}
       .navbar-brand{font-size:20px}
-      .nav-btn, .theme-toggle{padding:8px 14px;font-size:13px}
+      .nav-btn{padding:8px 14px;font-size:13px}
       .scroll-btn{width:44px;height:44px;font-size:18px;right:16px}
     }
   </style>
@@ -161,10 +111,6 @@
         <a href="https://myboke.kemeow.top" class="nav-btn">🏠 返回首页</a>
         <button class="nav-btn" onclick="scrollToTop()">⬆️ 回到顶部</button>
         <button class="nav-btn" onclick="scrollToBottom()">⬇️ 到达底部</button>
-        <button class="theme-toggle" onclick="toggleTheme()" title="切换主题">
-          <span class="theme-icon">🌙</span>
-          <span class="theme-text">深色</span>
-        </button>
       </div>
     </div>
   </nav>
@@ -189,54 +135,6 @@
     }
   </script>
   <script src="https://fastly.jsdelivr.net/gh/willow-god/Friend-Circle-Lite/main/fclite.min.js"></script>
-
-  <!-- 主题切换脚本 -->
-  <script>
-    // 主题切换功能
-    function toggleTheme() {
-      const html = document.documentElement;
-      const currentTheme = html.getAttribute('data-theme') || 'light';
-      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-      
-      html.setAttribute('data-theme', newTheme);
-      localStorage.setItem('theme', newTheme);
-      
-      // 更新按钮文本和图标
-      updateThemeButton(newTheme);
-    }
-
-    function updateThemeButton(theme) {
-      const themeIcon = document。querySelector('.theme-icon');
-      const themeText = document.querySelector('.theme-text');
-      
-      if (theme === 'dark') {
-        themeIcon。textContent = '☀️';
-        themeText。textContent = '浅色';
-      } else {
-        themeIcon。textContent = '🌙';
-        themeText。textContent = '深色';
-      }
-    }
-
-    // 初始化主题
-    function initTheme() {
-      const savedTheme = localStorage。getItem('theme') || 'light';
-      document。documentElement。setAttribute('data-theme'， savedTheme);
-      updateThemeButton(savedTheme);
-    }
-
-    // 页面加载时初始化主题
-    initTheme();
-
-    // 监听系统主题变化
-    window。matchMedia('(prefers-color-scheme: dark)')。addEventListener('change'， (e) => {
-      if (!localStorage.getItem('theme')) {
-        const newTheme = e.matches ? 'dark' : 'light';
-        document。documentElement.setAttribute('data-theme', newTheme);
-        updateThemeButton(newTheme);
-      }
-    });
-  </script>
 
   <!-- 滚动按钮脚本 -->
   <script>
