@@ -152,39 +152,52 @@
   </script>
   <script src="https://fastly.jsdelivr.net/gh/willow-god/Friend-Circle-Lite/main/fclite.min.js"></script>
 
-  <!-- 主题切换和滚动按钮脚本 -->
+
+  <!-- 主题切换和滚动按钮脚本 (优化版) -->
   <script>
-  (function () {
-    // 主题切换逻辑
-    const themeToggleBtn = document.getElementById('theme-toggle-btn');
-    const htmlEl = document.documentElement;
+    // 添加一个事件监听器，确保在整个 HTML 文档加载并解析完毕后，再执行内部的代码
+    document。addEventListener('DOMContentLoaded'， function() {
+      
+      // --- 主题切换逻辑 ---
+      const themeToggleBtn = document.getElementById('theme-toggle-btn');
+      const htmlEl = document.documentElement;
 
-    // 优先从 localStorage 获取主题
-    const currentTheme = localStorage.getItem('theme') || 'light';
-    htmlEl。setAttribute('data-theme'， currentTheme);
+      // 确保按钮确实存在，避免后续出错
+      if (themeToggleBtn) {
+        // 优先从 localStorage 获取主题，以保持用户选择
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        htmlEl.setAttribute('data-theme', savedTheme);
 
-    themeToggleBtn。addEventListener('click'， () => {
-      const newTheme = htmlEl.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      htmlEl.setAttribute('data-theme', newTheme);
-      localStorage.setItem('theme', newTheme);
+        // 为按钮绑定点击事件
+        themeToggleBtn.addEventListener('click', () => {
+          const newTheme = htmlEl.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          htmlEl。setAttribute('data-theme'， newTheme);
+          localStorage。setItem('theme'， newTheme);
+        });
+      }
+
+      // --- 滚动按钮逻辑 ---
+      const topBtn    = document.querySelector('.scroll-to-top');
+      const bottomBtn = document.querySelector('.scroll-to-bottom');
+      
+      function updateBtn() {
+        // 确保按钮存在
+        if (!topBtn || !bottomBtn) return;
+
+        const st = window.pageYOffset || document.documentElement.scrollTop;
+        const sh = document.documentElement.scrollHeight;
+        const wh = window.innerHeight;
+        topBtn.classList.toggle('visible', st > 300);
+        bottomBtn.classList.toggle('visible', st + wh < sh - 300);
+      }
+      
+      window.addEventListener('scroll', updateBtn);
+      updateBtn(); // 页面加载后立即调用一次，以正确设置按钮的初始可见性
+
+      window.scrollToTop    = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollToBottom = () => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
     });
-
-    // 滚动按钮逻辑
-    const topBtn    = document.querySelector('.scroll-to-top');
-    const bottomBtn = document.querySelector('.scroll-to-bottom');
-    function updateBtn() {
-      const st = window.pageYOffset || document.documentElement.scrollTop;
-      const sh = document.documentElement.scrollHeight;
-      const wh = window.innerHeight;
-      topBtn.classList.toggle('visible', st > 300);
-      bottomBtn.classList.toggle('visible', st + wh < sh - 300);
-    }
-    window.addEventListener('scroll', updateBtn);
-    document.addEventListener('DOMContentLoaded', updateBtn);
-
-    window.scrollToTop    = () => window.scrollTo({ top: 0, behavior: 'smooth' });
-    window.scrollToBottom = () => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
-  })();
   </script>
 </body>
 </html>
+
