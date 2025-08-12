@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>朋友圈 Lite</title>
+    <link rel="stylesheet" href="https://fastly.jsdelivr.net/gh/willow-god/Friend-Circle-Lite/main/fclite.min.css">
+    <style>
+        :root {
+            --nav-bg-light: #ffffff;
+            --nav-bg-dark: #1a1a1a;
+            --nav-text-light: #333333;
+            --nav-text-dark: #f0f0f0;
+            --nav-border-light: #e0e0e0;
+            --nav-border-dark: #333333;
+            --btn-bg-light: #f5f5f5;
+            --btn-bg-dark: #2a2a2a;
+            --btn-hover-light: #e0e0e0;
+            --btn-hover-dark: #3a3a3a;
+        }
+
+        body {
+            margin: 0;
+            padding-top: 60px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        /* 导航栏样式 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background-color: var(--nav-bg-light);
+            border-bottom: 1px solid var(--nav-border-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 1000;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .navbar-brand {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--nav-text-light);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-nav {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .nav-btn {
+            padding: 8px 16px;
+            background-color: var(--btn-bg-light);
+            border: 1px solid var(--nav-border-light);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--nav-text-light);
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-btn:hover {
+            background-color: var(--btn-hover-light);
+        }
+
+        /* 深色模式样式 */
+        [data-theme="dark"] .navbar {
+            background-color: var(--nav-bg-dark);
+            border-bottom-color: var(--nav-border-dark);
+        }
+
+        [data-theme="dark"] .navbar-brand {
+            color: var(--nav-text-dark);
+        }
+
+        [data-theme="dark"] .nav-btn {
+            background-color: var(--btn-bg-dark);
+            border-color: var(--nav-border-dark);
+            color: var(--nav-text-dark);
+        }
+
+        [data-theme="dark"] .nav-btn:hover {
+            background-color: var(--btn-hover-dark);
+        }
+
+        /* 滚动到顶部/底部按钮 */
+        .scroll-btn {
+            position: fixed;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--btn-bg-light);
+            border: 1px solid var(--nav-border-light);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+            z-index: 999;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .scroll-btn:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .scroll-to-top {
+            bottom: 80px;
+        }
+
+        .scroll-to-bottom {
+            bottom: 20px;
+        }
+
+        [data-theme="dark"] .scroll-btn {
+            background-color: var(--btn-bg-dark);
+            border-color: var(--nav-border-dark);
+            color: var(--nav-text-dark);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        /* 主题切换开关 */
+        .theme-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+
+        .theme-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "🌙";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(30px);
+            content: "☀️";
+        }
+
+        /* 主内容区域 */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 10px;
+            }
+            
+            .nav-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+            
+            .navbar-brand {
+                font-size: 18px;
+            }
+            
+            .scroll-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <a href="/" class="navbar-brand">朋友圈 Lite</a>
+        <div class="navbar-nav">
+            <a href="https://myboke.kemeow.top" class="nav-btn">🏠 返回首页</a>
+            <button class="nav-btn" onclick="scrollToTop()">⬆️ 回到顶部</button>
+            <button class="nav-btn" onclick="scrollToBottom()">⬇️ 到达底部</button>
+            <label class="theme-switch">
+                <input type="checkbox" id="theme-toggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </nav>
+
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <div id="friend-circle-lite-root"></div>
+    </div>
+
+    <!-- 滚动按钮 -->
+    <button class="scroll-btn scroll-to-top" onclick="scrollToTop()" title="回到顶部">⬆️</button>
+    <button class="scroll-btn scroll-to-bottom" onclick="scrollToBottom()" title="到达底部">⬇️</button>
+
+    <!-- 配置脚本 -->
+    <script>
+        if (typeof UserConfig === 'undefined') {
+            var UserConfig = {
+                private_api_url: 'https://fc.314926.xyz/',
+                page_turning_number: 24,
+                error_img: 'https://pic.imgdb.cn/item/6695daa4d9c307b7e953ee3d.jpg',
+            }
+        }
+    </script>
+    
+    <!-- 加载 Friend Circle Lite -->
+    <script src="https://fastly.jsdelivr.net/gh/willow-god/Friend-Circle-Lite/main/fclite.min.js"></script>
+
+    <script>
+        // 主题切换功能
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        // 检查本地存储的主题设置
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        setTheme(savedTheme);
+        themeToggle.checked = savedTheme === 'dark';
+
+        // 主题切换监听器
+        themeToggle.addEventListener('change', function() {
+            const newTheme = this.checked ? 'dark' : 'light';
+            setTheme(newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+
+        // 设置主题函数
+        function setTheme(theme) {
+            body.setAttribute('data-theme', theme);
+            
+            // 更新 Friend Circle Lite 的主题
+            const root = document.documentElement;
+            if (theme === 'dark') {
+                root.setAttribute('data-theme', 'dark');
+            } else {
+                root.setAttribute('data-theme', 'light');
+            }
+        }
+
+        // 滚动到顶部
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // 滚动到底部
+        function scrollToBottom() {
+            window.scrollTo({
+                top: document.documentElement.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
+
+        // 监听滚动事件，控制滚动按钮的显示/隐藏
+        let lastScrollTop = 0;
+        const scrollTopBtn = document.querySelector('.scroll-to-top');
+        const scrollBottomBtn = document.querySelector('.scroll-to-bottom');
+
+        window.addEventListener('scroll', function() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            // 显示/隐藏回到顶部按钮
+            if (scrollTop > 300) {
+                scrollTopBtn.style.opacity = '0.7';
+                scrollTopBtn.style.pointerEvents = 'auto';
+            } else {
+                scrollTopBtn.style.opacity = '0';
+                scrollTopBtn.style.pointerEvents = 'none';
+            }
+            
+            // 显示/隐藏到达底部按钮
+            const scrollHeight = document.documentElement.scrollHeight;
+            const windowHeight = window.innerHeight;
+            if (scrollTop + windowHeight < scrollHeight - 300) {
+                scrollBottomBtn.style.opacity = '0.7';
+                scrollBottomBtn.style.pointerEvents = 'auto';
+            } else {
+                scrollBottomBtn.style.opacity = '0';
+                scrollBottomBtn.style.pointerEvents = 'none';
+            }
+            
+            lastScrollTop = scrollTop;
+        });
+
+        // 初始化滚动按钮状态
+        window.dispatchEvent(new Event('scroll'));
+    </script>
+</body>
+</html>
