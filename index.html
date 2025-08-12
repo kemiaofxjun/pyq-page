@@ -6,23 +6,40 @@
   <title>朋友圈 Lite</title>
   <link rel="stylesheet" href="https://fastly.jsdelivr.net/gh/willow-god/Friend-Circle-Lite/main/fclite.min.css" />
 
-  <!-- 仅浅色主题 + 导航美化 -->
   <style>
+    /* 浅色主题变量 */
     :root {
       --nav-height: 70px;
+      --body-bg: #f4f4f9;
+      --text-color: #333;
+      --card-bg: #fff;
       --nav-bg: rgba(255, 255, 255, 0.9);
       --nav-text: #333;
       --nav-border: rgba(0, 0, 0, 0.08);
       --btn-bg: #f5f5f5;
       --btn-hover: #e0e0e0;
       --backdrop-blur: 20px;
+      --scroll-btn-bg: #fff;
     }
 
-    *{box-sizing:border-box;margin:0;padding:0}
+    /* 深色主题变量 */
+    :root[data-theme='dark'] {
+      --body-bg: #121212;
+      --text-color: #e0e0e0;
+      --card-bg: #1e1e1e;
+      --nav-bg: rgba(20, 20, 20, 0.85);
+      --nav-text: #e0e0e0;
+      --nav-border: rgba(255, 255, 255, 0.1);
+      --btn-bg: #2c2c2c;
+      --btn-hover: #3a3a3a;
+      --scroll-btn-bg: #2c2c2c;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0;transition: background-color .3s, color .3s, border-color .3s;}
     body{
       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-      background:#f4f4f9;
-      color:#000;
+      background: var(--body-bg);
+      color: var(--text-color);
       line-height:1.6;
       padding-top:var(--nav-height);
     }
@@ -71,13 +88,18 @@
       transition:.3s;
     }
     .nav-btn:hover{background:var(--btn-hover);transform:translateY(-2px)}
+    
+    /* 深色模式切换按钮特殊样式 */
+    #theme-toggle-btn {
+      min-width: 50px; /* 防止切换时宽度变化 */
+    }
 
     /* 滚动按钮 */
     .scroll-btn{
       position:fixed;
       right:24px;
       width:48px;height:48px;
-      background:#fff;
+      background:var(--scroll-btn-bg);
       border:1px solid var(--nav-border);
       border-radius:50%;
       cursor:pointer;
@@ -92,6 +114,19 @@
 
     /* 主内容 */
     .main-content{max-width:1200px;margin:0 auto;padding:24px}
+
+    /* 适配 Friend-Circle-Lite 卡片样式 */
+    :root[data-theme='dark'] #friend-circle-lite-root .fcl-item {
+      background-color: var(--card-bg) !important;
+      border: 1px solid var(--nav-border) !important;
+    }
+    :root[data-theme='dark'] #friend-circle-lite-root .fcl-item .fcl-content a,
+    :root[data-theme='dark'] #friend-circle-lite-root .fcl-item .fcl-info span {
+      color: var(--text-color) !important;
+    }
+     :root[data-theme='dark'] #friend-circle-lite-root .fcl-item .fcl-info span:hover {
+      color: #bbbbbb !important;
+    }
 
     /* 移动端 */
     @media(max-width:600px){
@@ -108,6 +143,7 @@
     <div class="navbar-inner">
       <a href="/" class="navbar-brand">朋友圈 Lite</a>
       <div class="navbar-nav">
+        <button id="theme-toggle-btn" class="nav-btn">🌙</button>
         <a href="https://myboke.kemeow.top" class="nav-btn">🏠 返回首页</a>
         <button class="nav-btn" onclick="scrollToTop()">⬆️ 回到顶部</button>
         <button class="nav-btn" onclick="scrollToBottom()">⬇️ 到达底部</button>
@@ -136,9 +172,28 @@
   </script>
   <script src="https://fastly.jsdelivr.net/gh/willow-god/Friend-Circle-Lite/main/fclite.min.js"></script>
 
-  <!-- 滚动按钮脚本 -->
+  <!-- 主题切换和滚动按钮脚本 -->
   <script>
   (function () {
+    // 主题切换功能
+    const themeToggleBtn = document.getElementById('theme-toggle-btn');
+    const htmlEl = document.documentElement;
+    
+    // 初始化主题
+    // 优先从 localStorage 读取, 其次检测系统偏好, 默认为浅色
+    const currentTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    htmlEl.setAttribute('data-theme', currentTheme);
+    themeToggleBtn.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
+
+    // 切换按钮事件
+    themeToggleBtn。addEventListener('click'， function() {
+      const newTheme = htmlEl.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      htmlEl。setAttribute('data-theme'， newTheme);
+      localStorage.setItem('theme', newTheme);
+      themeToggleBtn.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+    });
+
+    // 滚动按钮功能
     const topBtn    = document.querySelector('.scroll-to-top');
     const bottomBtn = document.querySelector('.scroll-to-bottom');
     function updateBtn() {
