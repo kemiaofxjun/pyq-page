@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <!-- 首屏零延迟主题写入 -->
+  <!-- 1. 首屏就把主题写到 <html> -->
   <script>
     (function () {
       const theme = localStorage.getItem('theme') || 'light';
@@ -14,9 +14,7 @@
   <title>朋友圈 Lite</title>
   <link rel="stylesheet" href="https://fastly.jsdelivr.net/gh/willow-god/Friend-Circle-Lite/main/fclite.min.css" />
 
-  <!-- 全局 & 导航美化 -->
   <style>
-    /* 全局变量 */
     :root {
       --nav-height: 70px;
       --nav-bg-light: rgba(255,255,255,.9);
@@ -29,8 +27,8 @@
       --btn-bg-dark:#2a2a2a;
       --btn-hover-light:#e0e0e0;
       --btn-hover-dark:#3a3a3a;
-      --backdrop-blur:20px;
       --primary:#3498db;
+      --backdrop-blur:20px;
     }
 
     *{box-sizing:border-box;margin:0;padding:0}
@@ -60,21 +58,13 @@
     [data-theme="dark"]  .navbar{background:var(--nav-bg-dark);border-bottom:1px solid var(--nav-border-dark)}
 
     .navbar-inner{
-      width:100%;
-      max-width:1200px;
+      width:100%;max-width:1200px;
       display:flex;
       align-items:center;
       justify-content:space-between;
       padding:0 24px;
     }
-    .navbar-brand{
-      font-size:22px;
-      font-weight:700;
-      text-decoration:none;
-      display:flex;
-      align-items:center;
-      gap:8px;
-    }
+    .navbar-brand{font-size:22px;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:8px}
     [data-theme="light"] .navbar-brand{color:var(--nav-text-light)}
     [data-theme="dark"]  .navbar-brand{color:var(--nav-text-dark)}
     .navbar-brand::before{content:"🌐";font-size:24px}
@@ -99,7 +89,8 @@
       position:absolute;
       cursor:pointer;
       top:0;left:0;right:0;bottom:0;
-      background:#e0e0e0;border-radius:26px;
+      background:#e0e0e0;
+      border-radius:26px;
       transition:.4s;
     }
     .slider:before{
@@ -107,7 +98,8 @@
       position:absolute;
       height:20px;width:20px;
       left:3px;bottom:3px;
-      background:#fff;border-radius:50%;
+      background:#fff;
+      border-radius:50%;
       transition:.4s;
       display:flex;align-items:center;justify-content:center;font-size:12px
     }
@@ -183,36 +175,36 @@
   </script>
   <script src="https://fastly.jsdelivr.net/gh/willow-god/Friend-Circle-Lite/main/fclite.min.js"></script>
 
-  <!-- 主题 & 滚动脚本 -->
+  <!-- 主题 & 滚动脚本（Cloudflare/Vercel 安全版） -->
   <script>
   (function () {
     // 主题切换
     const toggle = document.getElementById('theme-toggle');
     const html   = document.documentElement;
     const saved  = localStorage.getItem('theme') || 'light';
-    toggle.checked = saved === 'dark';
+    toggle。checked = saved === 'dark';
 
-    toggle.addEventListener('change'， () => {
-      const 下一处 = toggle.checked ? 'dark' : 'light';
+    toggle.addEventListener('change', () => {
+      const next = toggle.checked ? 'dark' : 'light';
       html.setAttribute('data-theme'， 下一处);
-      localStorage。setItem('theme'， 下一处);
+      localStorage.setItem('theme', next);
     });
 
     // 滚动按钮
-    const topBtn    = document。querySelector('.scroll-to-top');
-    const bottomBtn = document。querySelector('.scroll-to-bottom');
+    const topBtn    = document.querySelector('.scroll-to-top');
+    const bottomBtn = document.querySelector('.scroll-to-bottom');
     function updateBtn() {
       const st = window.pageYOffset || document.documentElement.scrollTop;
-      const sh = document.documentElement。scrollHeight;
-      const wh = window。innerHeight;
-      topBtn.classList.toggle('visible'， st > 300);
-      bottomBtn.classList.toggle('visible'， st + wh < sh - 300);
+      const sh = document.documentElement.scrollHeight;
+      const wh = window.innerHeight;
+      topBtn.classList.toggle('visible', st > 300);
+      bottomBtn.classList.toggle('visible', st + wh < sh - 300);
     }
     window.addEventListener('scroll', updateBtn);
     document.addEventListener('DOMContentLoaded', updateBtn);
 
     // 滚动函数
-    window.scrollToTop    = () => window。scrollTo({ top: 0， behavior: 'smooth' });
+    window.scrollToTop    = () => window.scrollTo({ top: 0, behavior: 'smooth' });
     window.scrollToBottom = () => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
   })();
   </script>
