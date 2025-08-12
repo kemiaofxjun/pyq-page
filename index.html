@@ -7,73 +7,104 @@
     <link rel="stylesheet" href="https://fastly.jsdelivr.net/gh/willow-god/Friend-Circle-Lite/main/fclite.min.css">
     <style>
         :root {
-            --nav-bg-light: #ffffff;
-            --nav-bg-dark: #1a1a1a;
+            --nav-bg-light: rgba(255, 255, 255, 0.9);
+            --nav-bg-dark: rgba(28, 28, 28, 0.9);
             --nav-text-light: #333333;
             --nav-text-dark: #f0f0f0;
-            --nav-border-light: #e0e0e0;
-            --nav-border-dark: #333333;
-            --btn-bg-light: #f5f5f5;
-            --btn-bg-dark: #2a2a2a;
-            --btn-hover-light: #e0e0e0;
-            --btn-hover-dark: #3a3a3a;
+            --nav-border-light: rgba(0, 0, 0, 0.08);
+            --nav-border-dark: rgba(255, 255, 255, 0.08);
+            --btn-bg-light: rgba(245, 245, 245, 0.9);
+            --btn-bg-dark: rgba(42, 42, 42, 0.9);
+            --btn-hover-light: rgba(224, 224, 224, 0.9);
+            --btn-hover-dark: rgba(58, 58, 58, 0.9);
+            --primary-color: #3498db;
+            --backdrop-blur: 20px;
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
             margin: 0;
-            padding-top: 60px;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            padding-top: 80px;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            line-height: 1.6;
         }
 
         /* 导航栏样式 */
-        。navbar {
+        .navbar {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            height: 60px;
+            height: 70px;
             background-color: var(--nav-bg-light);
+            backdrop-filter: blur(var(--backdrop-blur));
+            -webkit-backdrop-filter: blur(var(--backdrop-blur));
             border-bottom: 1px solid var(--nav-border-light);
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
+            justify-content: center;
             z-index: 1000;
             transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
+        .navbar-container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
+
         .navbar-brand {
-            font-size: 20px;
-            font-weight: bold;
+            font-size: 22px;
+            font-weight: 700;
             color: var(--nav-text-light);
             text-decoration: none;
             transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .navbar-brand::before {
+            content: "🌐";
+            font-size: 24px;
         }
 
         .navbar-nav {
             display: flex;
-            gap: 15px;
             align-items: center;
+            gap: 12px;
         }
 
         .nav-btn {
-            padding: 8px 16px;
+            padding: 10px 18px;
             background-color: var(--btn-bg-light);
             border: 1px solid var(--nav-border-light);
-            border-radius: 6px;
+            border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
             color: var(--nav-text-light);
             font-size: 14px;
+            font-weight: 500;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
         .nav-btn:hover {
             background-color: var(--btn-hover-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         /* 深色模式样式 */
@@ -90,58 +121,21 @@
             background-color: var(--btn-bg-dark);
             border-color: var(--nav-border-dark);
             color: var(--nav-text-dark);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
         [data-theme="dark"] .nav-btn:hover {
             background-color: var(--btn-hover-dark);
-        }
-
-        /* 滚动到顶部/底部按钮 */
-        .scroll-btn {
-            position: fixed;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            background-color: var(--btn-bg-light);
-            border: 1px solid var(--nav-border-light);
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            transition: all 0.3s ease;
-            opacity: 0.7;
-            z-index: 999;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .scroll-btn:hover {
-            opacity: 1;
-            transform: scale(1.1);
-        }
-
-        .scroll-to-top {
-            bottom: 80px;
-        }
-
-        .scroll-to-bottom {
-            bottom: 20px;
-        }
-
-        [data-theme="dark"] .scroll-btn {
-            background-color: var(--btn-bg-dark);
-            border-color: var(--nav-border-dark);
-            color: var(--nav-text-dark);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
         /* 主题切换开关 */
         .theme-switch {
             position: relative;
             display: inline-block;
-            width: 60px;
-            height: 30px;
+            width: 52px;
+            height: 26px;
+            margin-left: 12px;
         }
 
         .theme-switch input {
@@ -157,62 +151,141 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 34px;
+            background-color: #e0e0e0;
+            transition: 0.4s;
+            border-radius: 26px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .slider:before {
             position: absolute;
             content: "🌙";
-            height: 22px;
-            width: 22px;
-            left: 4px;
-            bottom: 4px;
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
             background-color: white;
-            transition: .4s;
+            transition: 0.4s;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         input:checked + .slider {
-            background-color: #2196F3;
+            background-color: var(--primary-color);
         }
 
         input:checked + .slider:before {
-            transform: translateX(30px);
+            transform: translateX(26px);
             content: "☀️";
+        }
+
+        /* 滚动按钮 */
+        .scroll-btn {
+            position: fixed;
+            right: 24px;
+            width: 48px;
+            height: 48px;
+            background-color: var(--btn-bg-light);
+            backdrop-filter: blur(var(--backdrop-blur));
+            -webkit-backdrop-filter: blur(var(--backdrop-blur));
+            border: 1px solid var(--nav-border-light);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 999;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .scroll-btn.visible {
+            opacity: 0.8;
+            pointer-events: auto;
+        }
+
+        .scroll-btn:hover {
+            opacity: 1;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .scroll-to-top {
+            bottom: 100px;
+        }
+
+        .scroll-to-bottom {
+            bottom: 40px;
+        }
+
+        [data-theme="dark"] .scroll-btn {
+            background-color: var(--btn-bg-dark);
+            border-color: var(--nav-border-dark);
+            color: var(--nav-text-dark);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="dark"] .scroll-btn:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
         }
 
         /* 主内容区域 */
         .main-content {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 24px;
         }
 
         /* 响应式设计 */
         @media (max-width: 768px) {
             .navbar {
-                padding: 0 10px;
+                height: 60px;
             }
-            
-            .nav-btn {
-                padding: 6px 12px;
-                font-size: 12px;
+
+            .navbar-container {
+                padding: 0 16px;
             }
-            
+
             .navbar-brand {
-                font-size: 18px;
+                font-size: 20px;
             }
-            
+
+            .navbar-nav {
+                gap: 8px;
+            }
+
+            .nav-btn {
+                padding: 8px 14px;
+                font-size: 13px;
+            }
+
+            .theme-switch {
+                width: 48px;
+                height: 24px;
+                margin-left: 8px;
+            }
+
+            .slider:before {
+                height: 18px;
+                width: 18px;
+            }
+
+            input:checked + .slider:before {
+                transform: translateX(24px);
+            }
+
             .scroll-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 16px;
+                width: 44px;
+                height: 44px;
+                font-size: 18px;
+                right: 16px;
             }
         }
     </style>
@@ -220,15 +293,17 @@
 <body>
     <!-- 导航栏 -->
     <nav class="navbar">
-        <a href="/" class="navbar-brand">朋友圈 Lite</a>
-        <div class="navbar-nav">
-            <a href="https://myboke.kemeow.top" class="nav-btn">🏠 返回首页</a>
-            <button class="nav-btn" onclick="scrollToTop()">⬆️ 回到顶部</button>
-            <button class="nav-btn" onclick="scrollToBottom()">⬇️ 到达底部</button>
-            <label class="theme-switch">
-                <input type="checkbox" id="theme-toggle">
-                <span class="slider"></span>
-            </label>
+        <div class="navbar-container">
+            <a href="/" class="navbar-brand">朋友圈 Lite</a>
+            <div class="navbar-nav">
+                <a href="https://myboke.kemeow.top" class="nav-btn">🏠 返回首页</a>
+                <button class="nav-btn" onclick="scrollToTop()">⬆️ 回到顶部</button>
+                <button class="nav-btn" onclick="scrollToBottom()">⬇️ 到达底部</button>
+                <label class="theme-switch">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
         </div>
     </nav>
 
@@ -259,35 +334,33 @@
         // 主题切换功能
         const themeToggle = document.getElementById('theme-toggle');
         const body = document.body;
+        const scrollTopBtn = document.querySelector('.scroll-to-top');
+        const scrollBottomBtn = document.querySelector('.scroll-to-bottom');
 
         // 检查本地存储的主题设置
-        const savedTheme = localStorage.getItem('theme') || 'light';
+        const savedTheme = localStorage。getItem('theme') || 'light';
         setTheme(savedTheme);
         themeToggle.checked = savedTheme === 'dark';
 
         // 主题切换监听器
-        themeToggle.addEventListener('change', function() {
+        themeToggle。addEventListener('change'， function() {
             const newTheme = this.checked ? 'dark' : 'light';
             setTheme(newTheme);
-            localStorage.setItem('theme', newTheme);
+            localStorage。setItem('theme'， newTheme);
         });
 
         // 设置主题函数
         function setTheme(theme) {
-            body.setAttribute('data-theme', theme);
+            body。setAttribute('data-theme'， theme);
             
             // 更新 Friend Circle Lite 的主题
             const root = document.documentElement;
-            if (theme === 'dark') {
-                root.setAttribute('data-theme', 'dark');
-            } else {
-                root.setAttribute('data-theme', 'light');
-            }
+            root.setAttribute('data-theme', theme);
         }
 
         // 滚动到顶部
         function scrollToTop() {
-            window.scrollTo({
+            window。scrollTo({
                 top: 0,
                 behavior: 'smooth'
             });
@@ -295,46 +368,29 @@
 
         // 滚动到底部
         function scrollToBottom() {
-            window.scrollTo({
-                top: document.documentElement.scrollHeight,
+            window。scrollTo({
+                top: document.documentElement。scrollHeight,
                 behavior: 'smooth'
             });
         }
 
         // 监听滚动事件，控制滚动按钮的显示/隐藏
-        let lastScrollTop = 0;
-        const scrollTopBtn = document.querySelector('.scroll-to-top');
-        const scrollBottomBtn = document.querySelector('.scroll-to-bottom');
-
-        window.addEventListener('scroll', function() {
+        function handleScroll() {
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            
-            // 显示/隐藏回到顶部按钮
-            if (scrollTop > 300) {
-                scrollTopBtn.style.opacity = '0.7';
-                scrollTopBtn.style.pointerEvents = 'auto';
-            } else {
-                scrollTopBtn.style.opacity = '0';
-                scrollTopBtn.style.pointerEvents = 'none';
-            }
-            
-            // 显示/隐藏到达底部按钮
             const scrollHeight = document.documentElement.scrollHeight;
             const windowHeight = window.innerHeight;
-            if (scrollTop + windowHeight < scrollHeight - 300) {
-                scrollBottomBtn.style.opacity = '0.7';
-                scrollBottomBtn.style.pointerEvents = 'auto';
-            } else {
-                scrollBottomBtn.style.opacity = '0';
-                scrollBottomBtn.style.pointerEvents = 'none';
-            }
-            
-            lastScrollTop = scrollTop;
-        });
 
+            // 显示/隐藏回到顶部按钮
+            scrollTopBtn.classList.toggle('visible', scrollTop > 300);
+
+            // 显示/隐藏到达底部按钮
+            scrollBottomBtn.classList.toggle('visible', scrollTop + windowHeight < scrollHeight - 300);
+        }
+
+        window.addEventListener('scroll', handleScroll);
+        
         // 初始化滚动按钮状态
-        window.dispatchEvent(new Event('scroll'));
+        handleScroll();
     </script>
 </body>
-
 </html>
